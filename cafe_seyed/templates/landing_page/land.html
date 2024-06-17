@@ -1,0 +1,33 @@
+{% extends 'base/base.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- Bootstrap CSS -->
+  
+
+</head>
+<body>
+{% block content %}
+    {% for i in category %}
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ i.name }}</h5>
+                        <img src="{{ i.image.first.image.url }}" alt="{{ i.image.first.image.title }}" width="200px" height="200px">
+                        <p class="card-text">{{ i.description }}</p>
+                        <a href="{% url 'cafe:items' i.id %}" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    {% endfor %}
+{% endblock %}
+</body>
+</html>

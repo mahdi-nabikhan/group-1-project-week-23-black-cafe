@@ -79,15 +79,15 @@ class Payment(models.Model):
 #     phone = models.CharField(max_length=13)
 
 
-# class CheckOrder(models.Model):
-#     class Status(models.TextChoices):
-#         PENDING = ('Pending', 'Pending')
-#         DELIVERED = ('Delivered', 'Delivered')
-#         CANCELED = ('Canceled', 'Canceled')
-#
-#     staff_id = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-#     cart_id = models.ForeignKey(Cart, on_delete=models.DO_NOTHING)
-#     status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
+class CheckOrder(models.Model):
+    class Status(models.TextChoices):
+        PENDING = ('Pending', 'Pending')
+        DELIVERED = ('Delivered', 'Delivered')
+        CANCELED = ('Canceled', 'Canceled')
+
+    staff_id = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    cart_id = models.ForeignKey(Cart, on_delete=models.DO_NOTHING)
+    status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
 
 
 class Comment(models.Model):

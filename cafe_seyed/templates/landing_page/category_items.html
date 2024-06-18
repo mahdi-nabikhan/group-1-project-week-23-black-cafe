@@ -1,0 +1,26 @@
+{% extends 'base/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>Title</title>
+</head>
+<body>
+{% block content %}
+    {% for i in products %}
+        <div class="card" style="width: 18rem;">
+  
+  <div class="card-body">
+    <h5 class="card-title">{{ i.product_name }}</h5>
+    <p class="card-text">{{ i.price }}</p>
+    <a href="{% url 'cafe:detail' i.id %}" class="btn btn-primary">Go shop</a>
+  </div>
+</div>
+        
+
+    {% endfor %}
+{% endblock content %}
+</body>
+</html>

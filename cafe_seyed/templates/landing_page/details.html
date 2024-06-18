@@ -1,14 +1,29 @@
+{% extends 'base/base.html' %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    
 </head>
 <body>
-
+{% block content %}
 {% for i in product %}
-    <p>name:{{ i.product_name }}</p>
-    <p>price:{{ i.price }}</p>
+    {% for img in i.image.all%}
+        <div class="d-flex flex-row" >
+        <img src="{{ img.image.url }}" alt="{{ i.image.first.image.title }}" class="rounded mx-auto d-block" width="300px" height="100px">
+        </div>
+    {% endfor %}
+    <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+  <div class="card-header">{{ i.product_name }}</div>
+  <div class="card-body">
+    <h5 class="card-title">Primary card title</h5>
+    <p class="card-text">{{ i.description }}.</p>
+  </div>
+</div>
+    
+    <p></p>
 
 {% endfor %}
 <form method="post">
@@ -19,3 +34,4 @@
 
 </body>
 </html>
+{% endblock content %}

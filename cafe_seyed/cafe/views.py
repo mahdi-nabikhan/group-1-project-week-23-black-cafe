@@ -18,24 +18,24 @@ class CategoryListView(ListView):
     model = Categories
     queryset = Categories.objects.all()
     context_object_name = 'category'
+    template_name = 'landing_page/land.html'
 
 
-def items(request, category_id):
-    category = Categories.objects.get(id=category_id)
-    products = Products.objects.filter(category=category)
-    context = {'products': products, 'category': category}
-
-    return render(request, 'landing_page/category_items.html', context)
+# def items(request, category_id):
+#     category = Categories.objects.get(id=category_id)
+#     products = Products.objects.filter(category=category)
+#     context = {'products': products, 'category': category}
+#
+#     return render(request, 'landing_page/category_items.html', context)
 
 
 class ProductListView(View):
-    template_name = 'landing_page/category_items.html'
 
     def get(self, request, category_id):
         category = Categories.objects.get(id=category_id)
         products = Products.objects.filter(category=category)
         context = {'products': products, 'category': category}
-        return render(request, self.template_name, context)
+        return render(request, 'landing_page/category_items.html', context)
 
 
 def items_detail(request, item_id):
@@ -58,7 +58,23 @@ def items_detail(request, item_id):
         return render(request, 'landing_page/details.html', {'product': c, 'form': form})
 
 
+class ItemDetail(View):
 
+    def get(self, request, item_id):
+        product = Products.objects.filter(id=item_id)
+        form = OrderForm()
+        return render(request, 'landing_page/details.html', {'product': product, 'form': form})
+
+    def post(self, request, item_id):
+        product = Products.objects.filter(id=item_id)
+        product1 = Products.objects.get(id=item_id)
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            cart = Cart.objects.create(user=request.user)
+            print(cart)
+            order = OrderItem(product=product1, quantity=form.cleaned_data['quantity'], cart=cart)
+            order.save()
+            return render(request, 'landing_page/details.html', {'product':product,'form': form})
 
 
 # def order_items(request):

@@ -11,7 +11,7 @@
 {% block content %}
     {% for i in products %}
         <div class="card" style="width: 18rem;">
-  
+  <img src="{{ i.image.first.image.url }}" alt="{{ i.image.first.image.title }}" class="rounded mx-auto d-block" width="287px" height="100px">
   <div class="card-body">
     <h5 class="card-title">{{ i.product_name }}</h5>
     <p class="card-text">{{ i.price }}</p>

@@ -38,6 +38,9 @@ class Cart(models.Model):
     def sum(self):
         pass
 
+    def __str__(self):
+        return self.user.username
+
 
 class OrderItem(models.Model):
     product = models.ForeignKey(Products, on_delete=models.DO_NOTHING)
@@ -53,10 +56,10 @@ class OrderItem(models.Model):
     #     return self.total_price
 
     def prices(self):
-        pass
+        return self.product.price
 
     def total(self):
-        pass
+        return self.product.price * self.quantity
 
 
 class Payment(models.Model):

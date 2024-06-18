@@ -102,3 +102,10 @@ class Image(models.Model):
     title = models.CharField(max_length=200, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='images/', verbose_name='image')
+
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Products, related_name='image', on_delete=models.CASCADE)
+    title = models.CharField(max_length=200, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    image = models.ImageField(upload_to='product_image/', verbose_name='image')

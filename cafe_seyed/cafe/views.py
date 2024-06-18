@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+from django.views.generic import ListView, DetailView, View
+
 from .models import *
 from .forms import *
 
@@ -6,18 +8,34 @@ from .forms import *
 # Create your views here.
 
 
-def landing_page(request):
-    category = Categories.objects.all()
-    context = {'category': category}
-    return render(request, 'landing_page/land.html', context)
+# def landing_page(request):
+#     category = Categories.objects.all()
+#     context = {'category': category}
+#     return render(request, 'landing_page/land.html', context)
+#
+
+class CategoryListView(ListView):
+    model = Categories
+    queryset = Categories.objects.all()
+    context_object_name = 'category'
 
 
 def items(request, category_id):
     category = Categories.objects.get(id=category_id)
-    products = Products.objects.filter(category=category, availability=True)
+    products = Products.objects.filter(category=category)
     context = {'products': products, 'category': category}
 
     return render(request, 'landing_page/category_items.html', context)
+
+
+class ProductListView(View):
+    template_name = 'landing_page/category_items.html'
+
+    def get(self, request, category_id):
+        category = Categories.objects.get(id=category_id)
+        products = Products.objects.filter(category=category)
+        context = {'products': products, 'category': category}
+        return render(request, self.template_name, context)
 
 
 def items_detail(request, item_id):
@@ -38,6 +56,9 @@ def items_detail(request, item_id):
     else:
         form = OrderForm()
         return render(request, 'landing_page/details.html', {'product': c, 'form': form})
+
+
+
 
 
 # def order_items(request):
@@ -67,5 +88,5 @@ def cart_detail(request):
             cart.objects.get(id=form1['user_id'])
             return redirect('cafe:landing_page')
     else:
-        context = {'form': form,'cart': cart}
-        return render(request,'landing_page/forms/cart_views.html',context)
+        context = {'form': form, 'cart': cart}
+        return render(request, 'landing_page/forms/cart_views.html', context)

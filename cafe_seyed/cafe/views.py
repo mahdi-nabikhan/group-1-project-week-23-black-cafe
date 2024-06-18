@@ -49,7 +49,6 @@ def items_detail(request, item_id):
             total = form1['quantity'] * product.price
             OrderItem(product_id=product, user_id=user, quantity=form1['quantity'], price=product.price,
                       discount=0, total_price=total).save()
-            # add foregin key model
             Cart.objects.create(user_id=user, total_amount=total)
             return redirect('cafe:landing_page')
 
@@ -59,22 +58,23 @@ def items_detail(request, item_id):
 
 
 class ItemDetail(View):
+    template_name = 'landing_page/details.html'
 
     def get(self, request, item_id):
         product = Products.objects.filter(id=item_id)
         form = OrderForm()
-        return render(request, 'landing_page/details.html', {'product': product, 'form': form})
+        return render(request, self.template_name, {'product': product, 'form': form})
 
     def post(self, request, item_id):
-        product = Products.objects.filter(id=item_id)
-        product1 = Products.objects.get(id=item_id)
+        # product = Products.objects.filter(id=item_id)
+        product = Products.objects.get(id=item_id)
         form = OrderForm(request.POST)
         if form.is_valid():
             cart = Cart.objects.create(user=request.user)
-            print(cart)
-            order = OrderItem(product=product1, quantity=form.cleaned_data['quantity'], cart=cart)
+
+            order = OrderItem(product=product, quantity=form.cleaned_data['quantity'], cart=cart)
             order.save()
-            return render(request, 'landing_page/details.html', {'product':product,'form': form})
+            return render(request, self.template_name, {'product': product, 'form': form})
 
 
 # def order_items(request):

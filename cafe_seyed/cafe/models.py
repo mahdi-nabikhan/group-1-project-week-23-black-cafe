@@ -79,15 +79,15 @@ class Payment(models.Model):
 #     phone = models.CharField(max_length=13)
 
 
-# class CheckOrder(models.Model):
-#     class Status(models.TextChoices):
-#         PENDING = ('Pending', 'Pending')
-#         DELIVERED = ('Delivered', 'Delivered')
-#         CANCELED = ('Canceled', 'Canceled')
-#
-#     staff_id = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-#     cart_id = models.ForeignKey(Cart, on_delete=models.DO_NOTHING)
-#     status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
+class CheckOrder(models.Model):
+    class Status(models.TextChoices):
+        PENDING = ('Pending', 'Pending')
+        DELIVERED = ('Delivered', 'Delivered')
+        CANCELED = ('Canceled', 'Canceled')
+
+    staff_id = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    cart_id = models.ForeignKey(Cart, on_delete=models.DO_NOTHING)
+    status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
 
 
 class Comment(models.Model):
@@ -102,3 +102,10 @@ class Image(models.Model):
     title = models.CharField(max_length=200, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='images/', verbose_name='image')
+
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Products, related_name='image', on_delete=models.CASCADE)
+    title = models.CharField(max_length=200, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    image = models.ImageField(upload_to='product_image/', verbose_name='image')

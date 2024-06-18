@@ -18,24 +18,24 @@ class CategoryListView(ListView):
     model = Categories
     queryset = Categories.objects.all()
     context_object_name = 'category'
+    template_name = 'landing_page/land.html'
 
 
-def items(request, category_id):
-    category = Categories.objects.get(id=category_id)
-    products = Products.objects.filter(category=category)
-    context = {'products': products, 'category': category}
-
-    return render(request, 'landing_page/category_items.html', context)
+# def items(request, category_id):
+#     category = Categories.objects.get(id=category_id)
+#     products = Products.objects.filter(category=category)
+#     context = {'products': products, 'category': category}
+#
+#     return render(request, 'landing_page/category_items.html', context)
 
 
 class ProductListView(View):
-    template_name = 'landing_page/category_items.html'
 
     def get(self, request, category_id):
         category = Categories.objects.get(id=category_id)
         products = Products.objects.filter(category=category)
         context = {'products': products, 'category': category}
-        return render(request, self.template_name, context)
+        return render(request, 'landing_page/category_items.html', context)
 
 
 def items_detail(request, item_id):
@@ -49,7 +49,6 @@ def items_detail(request, item_id):
             total = form1['quantity'] * product.price
             OrderItem(product_id=product, user_id=user, quantity=form1['quantity'], price=product.price,
                       discount=0, total_price=total).save()
-            # add foregin key model
             Cart.objects.create(user_id=user, total_amount=total)
             return redirect('cafe:landing_page')
 
@@ -58,7 +57,24 @@ def items_detail(request, item_id):
         return render(request, 'landing_page/details.html', {'product': c, 'form': form})
 
 
+class ItemDetail(View):
+    template_name = 'landing_page/details.html'
 
+    def get(self, request, item_id):
+        product = Products.objects.filter(id=item_id)
+        form = OrderForm()
+        return render(request, self.template_name, {'product': product, 'form': form})
+
+    def post(self, request, item_id):
+        # product = Products.objects.filter(id=item_id)
+        product = Products.objects.get(id=item_id)
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            cart = Cart.objects.create(user=request.user)
+
+            order = OrderItem(product=product, quantity=form.cleaned_data['quantity'], cart=cart)
+            order.save()
+            return render(request, self.template_name, {'product': product, 'form': form})
 
 
 # def order_items(request):

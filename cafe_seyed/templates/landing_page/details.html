@@ -37,7 +37,7 @@
     <div class="card text-white bg-primary mb-3" style="max-width: max-content;">
   <div class="card-header">{{ i.product_name }}</div>
   <div class="card-body">
-    <h5 class="card-title">Primary card title</h5>
+   
     <p class="card-text">{{ i.description }}.</p>
   </div>
 </div>
@@ -48,7 +48,7 @@
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="add comment">
+    <input type="submit" value="add to cart">
 </form>
 
 </body>

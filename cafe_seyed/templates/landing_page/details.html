@@ -13,6 +13,7 @@
    <div id="productCarousel" class="carousel slide" data-ride="carousel">
   <ol class="carousel-indicators">
     {% for img in i.image.all %}
+        "--------"
     <li data-target="#productCarousel" data-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}"></li>
     {% endfor %}
   </ol>

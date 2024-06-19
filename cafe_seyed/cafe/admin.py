@@ -12,12 +12,12 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Products)
 class ProductsAdmin(admin.ModelAdmin):
-    list_display = []
+    list_display = ['product_name', 'price', 'discount', 'category']
 
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
-    list_display = []
+    list_display = ['product','cart']
 
 
 @admin.register(Cart)
@@ -35,4 +35,4 @@ class ImageAdmin(admin.ModelAdmin):
 
 @admin.register(ProductImage)
 class ProductImageAdmin(admin.ModelAdmin):
-    list_display = ['title', 'description','image']
+    list_display = ['title', 'description', 'image']

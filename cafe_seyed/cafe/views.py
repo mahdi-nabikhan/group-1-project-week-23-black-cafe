@@ -52,7 +52,7 @@ class ProductListView(View):
 #                       discount=0, total_price=total).save()
 #             Cart.objects.create(user_id=user, total_amount=total)
 #             return redirect('cafe:landing_page')
-#
+
 #     else:
 #         form = OrderForm()
 #         return render(request, 'landing_page/details.html', {'product': c, 'form': form})
@@ -94,6 +94,39 @@ class ItemDetail(View):
 #         form = OrderForm()
 #         return render(request, 'form_order.html', {'form': form})
 
+
+def cart_detail(request):
+    form = CartForm()
+    cart = Cart()
+    if request.method == 'POST':
+        form = CartForm(request.POST)
+        if form.is_valid():
+            form1 = form.cleaned_data
+            cart.objects.get(id=form1['user_id'])
+            return redirect('cafe:landing_page')
+    else:
+        context = {'form': form, 'cart': cart}
+        return render(request, 'landing_page/forms/cart_views.html', context)
+    
+
+def search_products(request):
+
+    product_name=request.GET.get('q')
+    products=Products.objects.filter(product_name__contains=product_name)
+
+
+    context={'products':products,
+             'not_found':f'{product_name} does not exist.'
+             }
+    return render(request ,'landing_page/forms/search_product.html',context)
+
+
+def about_us(request):
+
+    return render(request,'landing_page/about_us.html')
+
+def contact_us(request):
+    pass
 
 # def cart_detail(request):
 #     form = CartForm()

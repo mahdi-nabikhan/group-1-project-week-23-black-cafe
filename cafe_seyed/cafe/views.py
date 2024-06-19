@@ -147,3 +147,19 @@ class ShowCarts(View):
     def get(self, request):
         cart = Cart.objects.filter(user=request.user)
         return render(request, 'landing_page/all_carts.html', {'cart': cart})
+
+
+
+class Ticket(View):
+    def post(self, request):
+        form = TicketForm(request.POST)
+        if form.is_valid():
+            form.save(commit=False)
+            form.user = request.user
+            form.save()
+            return redirect('cafe:landing_page')
+
+    def get(self, request):
+        form = TicketForm()
+
+        return render(request, 'landing_page/forms/ticket_cart.html', {'form': form})

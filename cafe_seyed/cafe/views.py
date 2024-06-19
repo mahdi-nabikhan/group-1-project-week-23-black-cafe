@@ -30,12 +30,13 @@ class CategoryListView(ListView):
 
 
 class ProductListView(View):
+    template_name = 'landing_page/category_items.html'
 
     def get(self, request, category_id):
         category = Categories.objects.get(id=category_id)
         products = Products.objects.filter(category=category)
         context = {'products': products, 'category': category}
-        return render(request, 'landing_page/category_items.html', context)
+        return render(request, self.template_name, context)
 
 
 # def items_detail(request, item_id):
@@ -126,3 +127,16 @@ def about_us(request):
 
 def contact_us(request):
     pass
+
+# def cart_detail(request):
+#     form = CartForm()
+#     cart = Cart()
+#     if request.method == 'POST':
+#         form = CartForm(request.POST)
+#         if form.is_valid():
+#             form1 = form.cleaned_data
+#             cart.objects.get(id=form1['user_id'])
+#             return redirect('cafe:landing_page')
+#     else:
+#         context = {'form': form, 'cart': cart}
+#         return render(request, 'landing_page/forms/cart_views.html', context)

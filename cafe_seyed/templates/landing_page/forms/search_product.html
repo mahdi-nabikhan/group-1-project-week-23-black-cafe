@@ -1,0 +1,20 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+    {% if products %}
+        {% for i in products %}
+            <div class="card" style="width: 18rem;">
+            <img src="{{ i.image.first.image.url }}" alt="{{ i.image.first.image.title }}" class="rounded mx-auto d-block" width="287px" height="100px">
+                <div class="card-body">
+                <h5 class="card-title">{{ i.product_name }}</h5>
+                <p class="card-text">{{ i.price }}</p>
+                </div>
+            </div>
+        {% endfor %}
+        {% else %}
+            <div>
+                <h4>{{not_found}}</h4>
+            </div>
+    {% endif %}
+{% endblock %}

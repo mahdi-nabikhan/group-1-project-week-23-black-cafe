@@ -38,23 +38,23 @@ class ProductListView(View):
         return render(request, 'landing_page/category_items.html', context)
 
 
-def items_detail(request, item_id):
-    c = Products.objects.filter(id=item_id)
-    if request.method == 'POST':
-        form = OrderForm(request.POST)
-        if form.is_valid():
-            form1 = form.cleaned_data
-            product = Products.objects.get(id=item_id)
-            user = User.objects.get(id=form1['user_id'])
-            total = form1['quantity'] * product.price
-            OrderItem(product_id=product, user_id=user, quantity=form1['quantity'], price=product.price,
-                      discount=0, total_price=total).save()
-            Cart.objects.create(user_id=user, total_amount=total)
-            return redirect('cafe:landing_page')
+# def items_detail(request, item_id):
+#     c = Products.objects.filter(id=item_id)
+#     if request.method == 'POST':
+#         form = OrderForm(request.POST)
+#         if form.is_valid():
+#             form1 = form.cleaned_data
+#             product = Products.objects.get(id=item_id)
+#             user = User.objects.get(id=form1['user_id'])
+#             total = form1['quantity'] * product.price
+#             OrderItem(product_id=product, user_id=user, quantity=form1['quantity'], price=product.price,
+#                       discount=0, total_price=total).save()
+#             Cart.objects.create(user_id=user, total_amount=total)
+#             return redirect('cafe:landing_page')
 
-    else:
-        form = OrderForm()
-        return render(request, 'landing_page/details.html', {'product': c, 'form': form})
+#     else:
+#         form = OrderForm()
+#         return render(request, 'landing_page/details.html', {'product': c, 'form': form})
 
 
 class ItemDetail(View):
@@ -106,3 +106,23 @@ def cart_detail(request):
     else:
         context = {'form': form, 'cart': cart}
         return render(request, 'landing_page/forms/cart_views.html', context)
+    
+
+def search_products(request):
+
+    product_name=request.GET.get('q')
+    products=Products.objects.filter(product_name__contains=product_name)
+
+
+    context={'products':products,
+             'not_found':f'{product_name} does not exist.'
+             }
+    return render(request ,'landing_page/forms/search_product.html',context)
+
+
+def about_us(request):
+
+    return render(request,'landing_page/about_us.html')
+
+def contact_us(request):
+    pass

@@ -1,0 +1,10 @@
+{% for cart_item in cart %}
+    {{ cart_item.user.username }}
+    {{ cart_item.status }}
+    {{ cart_item.created_at }}
+    {{ cart_item.get_total_amount }}
+    {{ cart_item.sum }}
+    {% for order_item in cart_item.order_items.all %}
+        {{ order_item.product.product_name }}
+    {% endfor %}
+{% endfor %}

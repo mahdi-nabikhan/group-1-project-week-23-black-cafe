@@ -33,7 +33,8 @@ class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def get_total_amount(self):
-        pass
+        total = sum(item.product.price * item.quantity for item in self.order_items.all())
+        return total
 
     def sum(self):
         pass

@@ -7,9 +7,9 @@
   <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
     <a class="navbar-brand" href="{% url 'cafe:landing_page' %}"><img src="/media/images/image1_0.jpg" alt="" width="65px" height="65px"> Cafe Seyed</a>
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-      <!-- <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li> -->
+       <li class="nav-item active">
+        <a class="nav-link" href="{% url 'cafe:showcart' %}">Cart <span class="sr-only">(current)</span></a>
+      </li> 
       <li class="nav-item">
         <a class="nav-link" href="{% url 'cafe:about_us' %}">About US</a>
       </li>

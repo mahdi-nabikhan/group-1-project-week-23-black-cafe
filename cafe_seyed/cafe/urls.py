@@ -12,8 +12,13 @@ urlpatterns = [path('', CategoryListView.as_view(), name='landing_page'),
                path('about_us/', about_us, name='about_us'),
                path('contact_us/', contact_us, name='contact_us'),
                path('detail/<int:item_id>/', ItemDetail.as_view(), name='detail'),
+
+               path('showcart/',ShowCarts.as_view(), name='showcart'),
+               path('tickets/',Ticket.as_view(), name='ticket'),]
+              
+
                path('showcart/', ShowCarts.as_view(), name='showcart'),
                path('tickets/', Ticket.as_view(), name='ticket'),
                ]
 
-# path('order/',order_items,name='order'),]
+

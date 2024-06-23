@@ -150,17 +150,28 @@ class ShowCarts(View):
         return render(request, 'landing_page/all_carts.html', {'cart': cart})
 
 
+
 class Ticket(View):
     def post(self, request):
         form = TicketForm(request.POST)
         if form.is_valid():
+
             m = form.save(commit=False)
             m.user = request.user
 
             m.save()
+
+            form.save(commit=False)
+            form.user = request.user
+            form.save()
+
             return redirect('cafe:landing_page')
 
     def get(self, request):
         form = TicketForm()
 
+
         return render(request, 'landing_page/forms/ticket_cart.html', {'form': form})
+
+        return render(request, 'landing_page/forms/ticket_cart.html', {'form': form})
+

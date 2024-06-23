@@ -9,16 +9,16 @@
 </head>
 <body>
 {% block content %}
-{% for i in product %}
+
    <div id="productCarousel" class="carousel slide" data-ride="carousel">
   <ol class="carousel-indicators">
-    {% for img in i.image.all %}
+    {% for img in product.image.all %}
         "--------"
     <li data-target="#productCarousel" data-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}"></li>
     {% endfor %}
   </ol>
   <div class="carousel-inner">
-    {% for img in i.image.all %}
+    {% for img in product.image.all %}
     <div class="carousel-item {% if forloop.first %}active{% endif %}">
       <img class="d-block w-100" src="{{ img.image.url }}" alt="{{ img.image.title }}" width="200" height="200">
     </div>
@@ -35,16 +35,16 @@
 </div>
 
     <div class="card text-white bg-primary mb-3" style="max-width: max-content;">
-  <div class="card-header">{{ i.product_name }}</div>
+  <div class="card-header">{{ product.product_name }}</div>
   <div class="card-body">
    
-    <p class="card-text">{{ i.description }}.</p>
+    <p class="card-text">{{ product.description }}.</p>
   </div>
 </div>
     
     <p></p>
 
-{% endfor %}
+
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}

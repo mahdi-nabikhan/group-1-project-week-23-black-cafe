@@ -11,6 +11,7 @@ class CartForm(forms.Form):
     user_id = forms.IntegerField()
 
 
+
 class TicketForm(forms.ModelForm):
     class Meta:
         model = Ticket

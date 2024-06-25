@@ -1,0 +1,29 @@
+{% extends 'base/base.html' %}
+{% block content%}
+{% for cart_item in cart %}
+    <div class="card" style="width: 18rem;">
+  
+  <div class="card-body">
+    
+       {% for order_item in cart_item.order_items.all %}
+        <h4>{{ order_item.product.product_name }}</h4>
+    {% endfor %}
+    <p class="card-text">date cart:{{ cart_item.created_at }}.</p>
+    <p class="card-text">cart status:{{ cart_item.status }}.</p>
+    <p class="card-text">total amount for a product:{{ cart_item.get_total_amount }}.</p>
+{#    <p class="card-text">{{ cart_item.sum }}.</p>#}
+    <a href="#" class="btn btn-primary">Go for payment</a>
+  </div>
+</div>
+    
+  
+    
+    
+    
+    
+    
+    
+    
+   
+{% endfor %}
+  {% endblock content %}

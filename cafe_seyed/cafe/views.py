@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, DetailView, View
+from django.views.generic import ListView, View
 
 from .models import *
 from .forms import *
@@ -17,6 +17,7 @@ from .forms import *
 class CategoryListView(ListView):
     model = Categories
     queryset = Categories.objects.all()
+    # {'context object name :queryset}
     context_object_name = 'category'
     template_name = 'landing_page/land.html'
 
@@ -67,15 +68,15 @@ class ItemDetail(View):
         return render(request, self.template_name, {'product': product, 'form': form})
 
     def post(self, request, item_id):
-        # product = Products.objects.filter(id=item_id)
-        product = Products.objects.get(id=item_id)
+        #product = Products.objects.filter(id=item_id)
+        product1 = Products.objects.get(id=item_id)
         form = OrderForm(request.POST)
         if form.is_valid():
             cart = Cart.objects.create(user=request.user)
 
-            order = OrderItem(product=product, quantity=form.cleaned_data['quantity'], cart=cart)
+            order = OrderItem(product=product1, quantity=form.cleaned_data['quantity'], cart=cart)
             order.save()
-            return render(request, self.template_name, {'product': product, 'form': form})
+            return render(request, self.template_name, {'product': product1, 'form': form})
 
 
 # def order_items(request):
@@ -107,26 +108,25 @@ def cart_detail(request):
     else:
         context = {'form': form, 'cart': cart}
         return render(request, 'landing_page/forms/cart_views.html', context)
-    
+
 
 def search_products(request):
+    product_name = request.GET.get('q')
+    products = Products.objects.filter(product_name__contains=product_name)
 
-    product_name=request.GET.get('q')
-    products=Products.objects.filter(product_name__contains=product_name)
-
-
-    context={'products':products,
-             'not_found':f'{product_name} does not exist.'
-             }
-    return render(request ,'landing_page/forms/search_product.html',context)
+    context = {'products': products,
+               'not_found': f'{product_name} does not exist.'
+               }
+    return render(request, 'landing_page/forms/search_product.html', context)
 
 
 def about_us(request):
+    return render(request, 'landing_page/about_us.html')
 
-    return render(request,'landing_page/about_us.html')
 
 def contact_us(request):
     pass
+
 
 # def cart_detail(request):
 #     form = CartForm()
@@ -140,3 +140,38 @@ def contact_us(request):
 #     else:
 #         context = {'form': form, 'cart': cart}
 #         return render(request, 'landing_page/forms/cart_views.html', context)
+
+
+class ShowCarts(View):
+    # template_name =
+
+    def get(self, request):
+        cart = Cart.objects.filter(user=request.user)
+        return render(request, 'landing_page/all_carts.html', {'cart': cart})
+
+
+
+class Ticket(View):
+    def post(self, request):
+        form = TicketForm(request.POST)
+        if form.is_valid():
+
+            m = form.save(commit=False)
+            m.user = request.user
+
+            m.save()
+
+            form.save(commit=False)
+            form.user = request.user
+            form.save()
+
+            return redirect('cafe:landing_page')
+
+    def get(self, request):
+        form = TicketForm()
+
+
+        return render(request, 'landing_page/forms/ticket_cart.html', {'form': form})
+
+        return render(request, 'landing_page/forms/ticket_cart.html', {'form': form})
+

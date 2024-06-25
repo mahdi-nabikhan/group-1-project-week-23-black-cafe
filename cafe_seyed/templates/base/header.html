@@ -7,15 +7,33 @@
   <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
     <a class="navbar-brand" href="{% url 'cafe:landing_page' %}"><img src="/media/images/image1_0.jpg" alt="" width="65px" height="65px"> Cafe Seyed</a>
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-      <!-- <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li> -->
+       <li class="nav-item active">
+        <a class="nav-link" href="{% url 'cafe:showcart' %}">Cart <span class="sr-only">(current)</span></a>
+      </li> 
+
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'cafe:about_us' %}">About US</a>
+        <a class="nav-link active" href="{% url 'cafe:about_us' %}">About US</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
+
+      <li class="nav-item active">
+        <a class="nav-link " href="{% url 'cafe:ticket' %}">Ticket</a>
       </li>
+
+      {% if request.user.is_authenticated %}
+      <li class="nav-item active">
+        <a class="nav-link " href= "#">{{request.user.username}}</a>
+      </li>
+
+      <li class="nav-item active">
+      <a class="nav-link "  href= "{% url 'accounts:logout' %}">Logout</a>
+      </li>
+      {% comment %} <li class="nav-item active"> {% endcomment %}
+      {% else %}
+      <li class="nav-item active">
+      <a class="nav-link " href="{% url 'accounts:login' %}">Login</a>
+      </li>
+      {% endif %}
+
     </ul>
     <form class="form-inline my-2 my-lg-0" action="{% url 'cafe:search' %}" method="get">
       <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q">

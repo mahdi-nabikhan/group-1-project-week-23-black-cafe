@@ -19,7 +19,7 @@ class CategoryListView(ListView):
     queryset = Categories.objects.all()
     # {'context object name :queryset}
     context_object_name = 'category'
-    template_name = 'landing_page/land.html'
+    template_name = 'coffee_template/index.html' ######
 
 
 # def items(request, category_id):

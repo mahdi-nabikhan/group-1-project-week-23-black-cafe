@@ -17,7 +17,25 @@
 			  {% comment %} <li class="menu-active"><a href="#home">Home</a></li> {% endcomment %}
 			  <li><a href="#about">About</a></li>
 			  <li><a href="#coffee">Contact</a></li>
-			  <li><a href="#blog">Login</a></li>
+			 
+                 {% if request.user.is_authenticated %}
+      <li class="nav-item active">
+        <a class="nav-link " href= "#">{{request.user.username}}</a>
+      </li>
+
+      <li class="nav-item active">
+      <a class="nav-link "  href= "{% url 'accounts:logout' %}">Logout</a>
+      </li>
+         
+      {% comment %} <li class="nav-item active"> {% endcomment %}
+      {% else %}
+      <li class="nav-item active">
+      <a class="nav-link " href="{% url 'accounts:login' %}">Login</a>
+      </li>
+           <li class="nav-item active">
+      <a class="nav-link "  href= "#">Register</a>
+      </li>
+      {% endif %}
 			</ul>
 		  </nav><!-- #nav-menu-container -->		    		
 		</div>

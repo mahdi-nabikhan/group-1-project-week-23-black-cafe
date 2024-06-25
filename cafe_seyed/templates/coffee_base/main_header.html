@@ -1,0 +1,25 @@
+
+{% load static %}
+
+<header id="header" id="home" class="header-scrolled">
+	<div class="container">
+		<div class="row align-items-center justify-content-between d-flex">
+		  <div id="logo">
+			<a href="index.html"><img src={% static "img/logos.png" %} width='50px' alt="" title="" /></a>
+		  </div>
+		  <nav id="nav-menu-container">
+			<ul class="nav-menu">
+				<li><form class="form-inline">
+					<input class="form-control mr-sm-2" style="height:30px" type="search" placeholder="Search" aria-label="Search">
+					<button class="btn  my-2 my-sm-0" type="submit"  style="color: rgb(92, 66, 10);padding:2px">Search</button>
+				  </form>
+				</li>
+			  {% comment %} <li class="menu-active"><a href="#home">Home</a></li> {% endcomment %}
+			  <li><a href="#about">About</a></li>
+			  <li><a href="#coffee">Contact</a></li>
+			  <li><a href="#blog">Login</a></li>
+			</ul>
+		  </nav><!-- #nav-menu-container -->		    		
+		</div>
+	</div>
+  </header><!-- #header -->

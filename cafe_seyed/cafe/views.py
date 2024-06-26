@@ -117,7 +117,7 @@ def search_products(request):
     context = {'products': products,
                'not_found': f'{product_name} does not exist.'
                }
-    return render(request, 'landing_page/forms/search_product.html', context)
+    return render(request, 'coffee_template/generic.html', context)
 
 
 def about_us(request):

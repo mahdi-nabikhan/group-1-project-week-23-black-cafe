@@ -1,28 +1,28 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from cafe.urls import *
+
 
 # Create your views here.
 
 
 def loginview(request):
-
     if request.method == 'POST':
 
-        username=request.POST["username"]
-        password=request.POST["password"]
-        user = authenticate(request,username=username,password=password)
+        username = request.POST["username"]
+        password = request.POST["password"]
+        user = authenticate(request, username=username, password=password)
         if user is not None:
             if user.is_staff:
                 login(request, user)
                 return render(request, 'landing_page/staff.html')
-            login(request , user)
+            login(request, user)
             return redirect('cafe:landing_page')
         else:
             return HttpResponse('Invalid Login')
-        
-    return render (request,'accounts/login.html')
+
+    return render(request, 'accounts/login.html')
 
 
 def logoutview(request):
@@ -36,8 +36,10 @@ class RegisterView(View):
             return HttpResponse('Passwords do not match')
 
         user = User(username=request.POST['username'], email=request.POST['email'], password=request.POST['password'])
+        user.set_password(request.POST['password'])
         user.save()
+
         return redirect('cafe:landing_page')
 
     def get(self, request):
-        return render(request, 'accounts/registeration.html')
+        return render(request, 'accounts/registration.html')

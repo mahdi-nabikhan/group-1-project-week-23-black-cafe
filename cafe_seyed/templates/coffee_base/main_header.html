@@ -9,8 +9,8 @@
 		  </div>
 		  <nav id="nav-menu-container">
 			<ul class="nav-menu">
-				<li><form class="form-inline">
-					<input class="form-control mr-sm-2" style="height:30px" type="search" placeholder="Search" aria-label="Search">
+				<li><form method="get" class="form-inline" action="{% url 'cafe:search' %}">
+					<input class="form-control mr-sm-2" style="height:30px" type="search" placeholder="Search" aria-label="Search" name="q">
 					<button class="btn  my-2 my-sm-0" type="submit"  style="color: rgb(92, 66, 10);padding:2px">Search</button>
 				  </form>
 				</li>
@@ -33,7 +33,7 @@
       <a class="nav-link " href="{% url 'accounts:login' %}">Login</a>
       </li>
            <li class="nav-item active">
-      <a class="nav-link "  href= "{%url 'accounts:registration'%}">Register</a>
+      <a class="nav-link "  href= "{%url 'accounts:register'%}">Register</a>
       </li>
       {% endif %}
         {% if request.user.is_staff%}

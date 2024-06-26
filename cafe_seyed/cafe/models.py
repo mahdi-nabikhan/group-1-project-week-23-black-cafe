@@ -31,16 +31,22 @@ class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     status = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    liste = []
 
     def get_total_amount(self):
         total = sum(item.product.price * item.quantity for item in self.order_items.all())
+        self.liste.append(total)
         return total
 
     def sum(self):
-        pass
+        total = 0
+        for i in self.liste:
+            total += i
+        return total
 
-    def __str__(self):
-        return self.user.username
+
+def __str__(self):
+    return self.user.username
 
 
 class OrderItem(models.Model):
@@ -123,4 +129,3 @@ class Ticket(models.Model):
 
     def __str__(self):
         return f"{self.title} {self.description}"
-

@@ -19,6 +19,7 @@ urlpatterns = [path('', CategoryListView.as_view(), name='landing_page'),
 
             path('showcart/', ShowCarts.as_view(), name='showcart'),
             path('tickets/', Ticket.as_view(), name='ticket'),
+            path('add_category/', AddCategory.as_view(), name='add_category')
                ]
 
 

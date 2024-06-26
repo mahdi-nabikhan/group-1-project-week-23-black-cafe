@@ -31,13 +31,13 @@ class CategoryListView(ListView):
 
 
 class ProductListView(View):
-    template_name = 'landing_page/category_items.html'
+
 
     def get(self, request, category_id):
         category = Categories.objects.get(id=category_id)
         products = Products.objects.filter(category=category)
         context = {'products': products, 'category': category}
-        return render(request, self.template_name, context)
+        return render(request, 'coffee_template/generic.html', context)
 
 
 # def items_detail(request, item_id):
@@ -65,10 +65,10 @@ class ItemDetail(View):
     def get(self, request, item_id):
         product = Products.objects.filter(id=item_id)
         form = OrderForm()
-        return render(request, self.template_name, {'product': product, 'form': form})
+        return render(request, 'landing_page/details.html', {'product': product, 'form': form})
 
     def post(self, request, item_id):
-        #product = Products.objects.filter(id=item_id)
+        product = Products.objects.filter(id=item_id)
         product1 = Products.objects.get(id=item_id)
         form = OrderForm(request.POST)
         if form.is_valid():
@@ -76,7 +76,7 @@ class ItemDetail(View):
 
             order = OrderItem(product=product1, quantity=form.cleaned_data['quantity'], cart=cart)
             order.save()
-            return render(request, self.template_name, {'product': product1, 'form': form})
+            return render(request, 'landing_page/details.html', {'product': product, 'form': form})
 
 
 # def order_items(request):
@@ -169,9 +169,18 @@ class Ticket(View):
 
     def get(self, request):
         form = TicketForm()
-
-
         return render(request, 'landing_page/forms/ticket_cart.html', {'form': form})
 
-        return render(request, 'landing_page/forms/ticket_cart.html', {'form': form})
 
+class AddCategory(View):
+    def get(self, request):
+        form = AddCategoryForm()
+        return render(request, 'landing_page/forms/add_category.html', {'form': form})
+
+    def post(self, request):
+        form = AddCategoryForm(request.POST, request.FILES)
+        if form.is_valid():
+            category_item = form.cleaned_data
+            category = form.save()
+            Image.objects.create(image=category_item['input_image'], category=category)
+            return redirect('cafe:landing_page')

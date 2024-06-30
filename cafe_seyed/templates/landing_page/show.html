@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% for i in item %}
+    name:{{ i.product.product_name }}
+    <br>
+    price :{{ i.product.price }}
+    <br>
+    quantity :{{ i.quantity }}
+    <br>
+    all price :{{ i.total }}
+    <br>
+    <br>
+  
+{% endfor %}
+total price:{{ total_price }}
+</body>
+</html>

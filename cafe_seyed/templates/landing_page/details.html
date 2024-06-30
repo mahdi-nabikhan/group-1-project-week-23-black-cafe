@@ -10,7 +10,7 @@
 <body>
 {% block content %}
     {% for i in product %}
-        <div class="card mx-auto " style="width: 18rem;">
+        <div class="card mx-auto  " style="width: 18rem ; margin-top: 300px">
             <div id="carouselExampleControls{{ i.id }}" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
                     {% for img in i.image.all %}

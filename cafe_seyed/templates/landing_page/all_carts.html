@@ -1,25 +1,14 @@
 {% extends 'base/base.html' %}
-{% block content%}
+{% block content %}
 {% for cart_item in cart %}
     <div class="card" style="width: 18rem;">
-  
-  <div class="card-body">
-    
-       {% for order_item in cart_item.order_items.all %}
-        <h4>{{ order_item.product.product_name }}</h4>
-    {% endfor %}
-    <p class="card-text">date cart:{{ cart_item.created_at }}.</p>
-    <p class="card-text">cart status:{{ cart_item.status }}.</p>
-    <p class="card-text">total amount for a product:{{ cart_item.get_total_amount }}.</p>
-    <a href="#" class="btn btn-primary">Go for payment</a>
-  </div>
-</div>
+        <div class="card-body">
+           
+            <p class="card-text">تاریخ سبد خرید: {{ cart_item.created_at }}.</p>
+            <p class="card-text">وضعیت سبد خرید: {{ cart_item.status }}.</p>
+            <a href="{% url 'cafe:show' cart_item.id %}"> shows ditail</a>
+        </div>
+    </div>
 {% endfor %}
 
-    {% for i in cart %}
-        {% if forloop.counter == 1 %}
-            {{ i.sum }}
-        {% endif %}
-    {% endfor %}
-  
-  {% endblock content %}
+{% endblock %}

@@ -15,6 +15,20 @@ class Categories(models.Model):
     description = models.TextField()
 
 
+class Payment(models.Model):
+    class Status(models.TextChoices):
+        PAY = 'PD', 'Paid'
+        NOT_PAY = 'NP', 'Not Paid'
+
+    # ... other fields ...
+
+    payment_status = models.CharField(
+        max_length=2,
+        choices=Status.choices,
+        default=Status.NOT_PAY
+    )
+
+
 class Products(models.Model):
     product_name = models.CharField(max_length=200, null=False)
     quantity_in_stock = models.IntegerField(null=False)
@@ -31,18 +45,13 @@ class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     status = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    liste = []
+
 
     def get_total_amount(self):
         total = sum(item.product.price * item.quantity for item in self.order_items.all())
-        self.liste.append(total)
+    
         return total
 
-    def sum(self):
-        total = 0
-        for i in self.liste:
-            total += i
-        return total
 
 
 def __str__(self):
@@ -54,6 +63,8 @@ class OrderItem(models.Model):
     quantity = models.IntegerField(null=False)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="order_items")
 
+    # total_cost = product.price * quantity
+    # total_cost= models.BigIntegerField(default=0)
     # TODO: Merge the two methods. Don't be clown
     # def all_price(self):
     #     if self.discount > 0:
@@ -67,20 +78,6 @@ class OrderItem(models.Model):
 
     def total(self):
         return self.product.price * self.quantity
-
-
-class Payment(models.Model):
-    class Status(models.TextChoices):
-        PAY = 'PD', 'Paid'
-        NOT_PAY = 'NP', 'Not Paid'
-
-    # ... other fields ...
-
-    payment_status = models.CharField(
-        max_length=2,
-        choices=Status.choices,
-        default=Status.NOT_PAY
-    )
 
 
 # class Staff(models.Model):
@@ -129,3 +126,9 @@ class Ticket(models.Model):
 
     def __str__(self):
         return f"{self.title} {self.description}"
+
+
+
+
+ #  ما یک کلاس نیاز داریم که یک فارن کی از یوزر و یک فارن کی هم از کارت و یک فیلد هم برای حالت ان
+ # در این حالت اگر شی از این کلاس در حالتی قرار داشته باشد که هنوز بسته نشده باشد مجصولی جدید به ان اضافه شود و اگر وجود نداشت یک شی جدید از این کلاس ایجاد شود ومحصول درون ان قرار بگیرد

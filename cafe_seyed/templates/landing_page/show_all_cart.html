@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% for cart_item in carts %}
+    <div class="card" style="width: 18rem;">
+  <div class="card-body">
+       {% for order_item in cart_item.order_items.all %}
+        <h4>{{ order_item.product.product_name }}</h4>
+    {% endfor %}
+    <p class="card-text">date cart:{{ cart_item.created_at }}.</p>
+    <p class="card-text">cart status:{{ cart_item.status }}.</p>
+    <p class="card-text">total amount for a product:{{ cart_item.get_total_amount }}.</p>
+    <a href="#" class="btn btn-primary">Go for payment</a>
+  </div>
+</div>
+{% endfor %}
+</body>
+</html>

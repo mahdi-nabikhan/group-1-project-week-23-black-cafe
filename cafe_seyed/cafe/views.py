@@ -1,3 +1,4 @@
+from django.db.models import Sum, F
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, View
 
@@ -19,7 +20,7 @@ class CategoryListView(ListView):
     queryset = Categories.objects.all()
     # {'context object name :queryset}
     context_object_name = 'category'
-    template_name = 'coffee_template/index.html' ######
+    template_name = 'coffee_template/index.html'  ######
 
 
 # def items(request, category_id):
@@ -31,7 +32,6 @@ class CategoryListView(ListView):
 
 
 class ProductListView(View):
-
 
     def get(self, request, category_id):
         category = Categories.objects.get(id=category_id)
@@ -72,10 +72,15 @@ class ItemDetail(View):
         product1 = Products.objects.get(id=item_id)
         form = OrderForm(request.POST)
         if form.is_valid():
-            cart = Cart.objects.create(user=request.user)
+            order = OrderItem(product=product1, quantity=form.cleaned_data['quantity'])
 
-            order = OrderItem(product=product1, quantity=form.cleaned_data['quantity'], cart=cart)
-            order.save()
+            if Cart.objects.filter(user=request.user, status=False).first():
+                m = Cart.objects.get(user=request.user, status=False)
+                order.cart = m
+                order.save()
+            else:
+                order.cart = Cart.objects.create(user=request.user)
+                order.save()
             return render(request, 'landing_page/details.html', {'product': product, 'form': form})
 
 
@@ -142,20 +147,21 @@ def contact_us(request):
 #         return render(request, 'landing_page/forms/cart_views.html', context)
 
 
-class ShowCarts(View):
-    # template_name =
-
-    def get(self, request):
-        cart = Cart.objects.filter(user=request.user)
-        return render(request, 'landing_page/all_carts.html', {'cart': cart})
-
+# class ShowCarts(View):
+#     def get(self, request):
+#         cart = Cart.objects.filter(user=request.user)
+#
+#         cart = cart.annotate(result=F('order_items__product__price') * F('order_items__quantity'))
+#
+#         total_price = cart.aggregate(total_price=Sum('result'))['total_price']
+#
+#         return render(request, 'landing_page/all_carts.html', {'cart': cart, 'total_price': total_price})
 
 
 class Ticket(View):
     def post(self, request):
         form = TicketForm(request.POST)
         if form.is_valid():
-
             m = form.save(commit=False)
             m.user = request.user
 
@@ -184,3 +190,66 @@ class AddCategory(View):
             category = form.save()
             Image.objects.create(image=category_item['input_image'], category=category)
             return redirect('cafe:landing_page')
+
+
+class AddProduct(View):
+    def get(self, request, category_id):
+        form = AddProductForm()
+        context = {'form': form}
+        return render(request, 'landing_page/forms/add_product.html', context)
+
+    def post(self, request, category_id):
+        category = Categories.objects.get(id=category_id)
+        form = AddProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.category = category
+            product.save()
+            ProductImage.objects.create(image=form.cleaned_data['input_image'], product=product)
+            return redirect('cafe:landing_page')
+
+
+class AddItem(ListView):
+    model = Categories
+    queryset = Categories.objects.all()
+    context_object_name = 'category'
+    template_name = 'landing_page/admin_panel.html'
+
+
+class AdminShowCarts(ListView):
+    model = Cart
+    queryset = Cart.objects.filter(status=True)
+    context_object_name = 'carts'
+    template_name = 'landing_page/show_all_cart.html'
+
+
+class Show(View):
+    def get(self, request, cart_id):
+        cart = Cart.objects.get(id=cart_id)
+        item = OrderItem.objects.filter(cart=cart)
+        cart2 = item.annotate(result=F('product__price') * F('quantity'))
+
+        total_price = cart2.aggregate(total_price=Sum('result'))['total_price']
+
+        context = {'item': item, 'total_price': total_price}
+        return render(request, 'landing_page/show.html', context)
+
+
+class ShowCarts(View):
+    def get(self, request):
+        cart = Cart.objects.filter(user=request.user, status=False)
+        return render(request, 'landing_page/all_carts.html', {'cart': cart})
+
+
+class StaffPage(View):
+    def get(self, request):
+        return render(request, template_name='landing_page/staff.html')
+
+
+class AdminShowCart(View):
+    template_name = 'landing_page/adminshowcart.html'
+
+    def get(self, request):
+        cart = Cart.objects.all()
+        context = {'cart': cart}
+        return render(request, template_name=self.template_name, context=context)

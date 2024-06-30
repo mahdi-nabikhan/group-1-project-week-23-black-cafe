@@ -39,7 +39,7 @@
       </li>
       {% endif %}
         {% if request.user.is_staff%}
-            <<a class="nav-link " href="{% url 'cafe:add_category' %}">go admin panel</a>
+            <<a class="nav-link " href="{% url 'cafe:staff' %}">go admin panel</a>
             
         {% endif %}
 			</ul>

@@ -52,10 +52,8 @@ class Cart(models.Model):
     
         return total
 
-
-
-def __str__(self):
-    return self.user.username
+    def __str__(self):
+        return self.user.username
 
 
 class OrderItem(models.Model):

@@ -73,10 +73,9 @@ class ItemDetail(View):
         form = OrderForm(request.POST)
         if form.is_valid():
             order = OrderItem(product=product1, quantity=form.cleaned_data['quantity'])
-
-            if Cart.objects.filter(user=request.user, status=False).first():
-                m = Cart.objects.get(user=request.user, status=False)
-                order.cart = m
+            test = Cart.objects.filter(user=request.user, status=False).first()
+            if test:
+                order.cart = test
                 order.save()
             else:
                 order.cart = Cart.objects.create(user=request.user)

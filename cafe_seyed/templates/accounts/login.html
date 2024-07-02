@@ -41,7 +41,7 @@
         <div class="col-lg-8">
           <div class="card-body py-5 px-md-5">
   
-            <form method="post" >
+            <form method="post" action="{% url "accounts:login" %}" >
               <!-- Email input -->
                     {% csrf_token %}
               <div data-mdb-input-init class="form-outline mb-4">
@@ -82,7 +82,13 @@
     </div>
   </section>
   <!-- Section: Design Block -->
-
+ 
 
 </body>
-</html>
+</html> 
+{% comment %} 
+<form method='post'>
+  {% csrf_token%}
+  {{form.as_p}}
+  <input type="submit" value="login" class="btn btn-primary btn-lg">
+</form> {% endcomment %}

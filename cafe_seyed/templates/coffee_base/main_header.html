@@ -20,7 +20,7 @@
 			 
                {% if request.user.is_authenticated %}
       <li class="nav-item active">
-        <a class="nav-link " href= "#">{{request.user.username}}</a>
+        <a class="nav-link " href= "#">{{request.user.first_name}}</a>
       </li>
          <li class="nav-item active">
         <a class="nav-link " href= "{% url 'cafe:showcart' %}">cart</a>

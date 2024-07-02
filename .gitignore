@@ -3,3 +3,4 @@ db.sqlite3
 .idea
 cafe_seyed/venv
 *.pyc
+__pycache__

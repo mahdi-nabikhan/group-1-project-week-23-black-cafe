@@ -55,7 +55,7 @@ class Cart(models.Model):
         return total
 
     def __str__(self):
-        return self.user.email
+        return f"{self.user.email} {self.status} {self.created_at}"
 
 
 class OrderItem(models.Model):

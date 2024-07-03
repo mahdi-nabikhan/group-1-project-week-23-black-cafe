@@ -261,14 +261,21 @@ class AdminShowCart(View):
 
 
 def chart(request):
-    test = OrderItem.objects.filter(cart__status=True)
+    result = (OrderItem.objects.all()
+              .values('product__product_name')
+              .annotate(dcount=Sum('quantity'))
+              .order_by()
+              )
     product_name = []
     quantity = []
-    for i in test:
-        product_name.append(i.product.product_name)
-        quantity.append(i.quantity)
+    for i in result:
+        for j in i.values():
+            if type(j) == int:
+                quantity.append(j)
+            else:
+                product_name.append(j)
 
-    context = {'test': test, 'quantity': quantity, 'label': product_name}
+    context = {'test': result, 'quantity': quantity, 'label': product_name}
     return render(request, 'landing_page/cats.html', context)
 
 
@@ -323,3 +330,26 @@ def user_chart(request):
 
     context = {'quantity': quantity, 'city': city, 'age': age, 'count_age': count_age, 'd': d}
     return render(request, 'landing_page/userchart.html', context)
+
+
+from django.db.models import Count
+from django.db.models.functions import ExtractHour
+
+
+def cart_chart(request):
+    result = (Cart.objects.all()
+              .annotate(hour=ExtractHour('created_at'))
+              .values('hour')
+              .annotate(dcount=Count('hour'))
+              .order_by('hour')
+              )
+
+    time = []
+    for i in result:
+        time.append(i['hour'])
+
+    quantity = []
+    for i in result:
+        quantity.append(i['dcount'])
+    context = {'result': result, 'time': time, 'quantity': quantity}
+    return render(request, 'landing_page/cart_chart.html', context)

@@ -10,7 +10,7 @@
   new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: {{ label|safe }},
+      labels: {{ time|safe }},
       datasets: [{
         label: '# of Votes',
         data: ({{ quantity|safe }}),
@@ -26,5 +26,4 @@
     }
   });
 </script>
-<a href="{% url 'cafe:export_to_excel'%}">download information </a>
-{{ test }}
+

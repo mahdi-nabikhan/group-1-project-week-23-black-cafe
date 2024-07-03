@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple Charts Example</title>
+    <!-- Include Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body style='width: 500px ;height: 500px'>
+<!-- Pie Chart -->
+<canvas id="myPieChart"></canvas>
+
+<!-- Bar Chart -->
+<div>
+    <canvas id="myBarChart"></canvas>
+</div>
+
+<script>
+    // Pie Chart Data
+    const pieData = {
+        labels: {{ city|safe }},
+        datasets: [{
+            label: 'customer from each city',
+            data: {{ quantity|safe }},
+            backgroundColor: ['rgb(255, 99, 132)', 'rgb(54, 162, 235)', 'rgb(255, 205, 86)'],
+            hoverOffset: 4,
+        }],
+    };
+
+    // Bar Chart Data (replace with your actual data)
+    const barData = {
+        labels: {{ age|safe }},
+        datasets: [{
+            label: 'lens of age of customer',
+            data: {{ count_age|safe }},
+            backgroundColor: 'rgb(75, 192, 192)',
+            borderWidth: 1,
+        }],
+    };
+
+    // Create Pie Chart
+    const pieCtx = document.getElementById('myPieChart').getContext('2d');
+    new Chart(pieCtx, {
+        type: 'pie',
+        data: pieData,
+    });
+
+    // Create Bar Chart
+    const barCtx = document.getElementById('myBarChart').getContext('2d');
+    new Chart(barCtx, {
+        type: 'bar',
+        data: barData,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                },
+            },
+        },
+    });
+</script>
+</body>
+</html>
+
+{{ d }}

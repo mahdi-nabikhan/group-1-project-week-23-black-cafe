@@ -1,7 +1,13 @@
-from django.db.models import Sum, F
+from django.db.models import Sum, F, Count
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, View
+from django.http import HttpResponse
+from openpyxl import Workbook
+from openpyxl.descriptors import Max
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 from .models import *
 from .forms import *
 
@@ -252,3 +258,68 @@ class AdminShowCart(View):
         cart = Cart.objects.all()
         context = {'cart': cart}
         return render(request, template_name=self.template_name, context=context)
+
+
+def chart(request):
+    test = OrderItem.objects.filter(cart__status=True)
+    product_name = []
+    quantity = []
+    for i in test:
+        product_name.append(i.product.product_name)
+        quantity.append(i.quantity)
+
+    context = {'test': test, 'quantity': quantity, 'label': product_name}
+    return render(request, 'landing_page/cats.html', context)
+
+
+def export_to_excel(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="products.xlsx"'
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Products"
+
+    # Add headers
+    headers = ["Name", "Price", "Quantity"]
+    ws.append(headers)
+
+    # Add data from the model
+    result = OrderItem.objects.filter(cart__status=True)
+    for products in result:
+        ws.append([products.product.product_name, products.product.price, products.quantity])
+
+    # Save the workbook to the HttpResponse
+    wb.save(response)
+    return response
+
+
+def user_chart(request):
+    result = (User.objects.all()
+              .values('city')
+              .annotate(dcount=Count('id'))
+              .order_by()
+              )
+    user_age = (User.objects.all()
+                .values('age')
+                .annotate(dcount=Count('id'))
+                .order_by()
+                )
+    city = []
+    quantity = []
+    age = []
+    count_age = []
+    d = []
+    for dicts in result:
+        for j in dicts.values():
+            if type(j) == int:
+                quantity.append(j)
+            else:
+                city.append(j)
+    for dict in user_age:
+        age.append(dict['age'])
+        count_age.append(dict['dcount'])
+        d.append(dict)
+
+    context = {'quantity': quantity, 'city': city, 'age': age, 'count_age': count_age, 'd': d}
+    return render(request, 'landing_page/userchart.html', context)

@@ -23,6 +23,9 @@ urlpatterns = [path('', CategoryListView.as_view(), name='landing_page'),
                path('seecart/', AdminShowCarts.as_view(), name='seecart'),
                path('show/<cart_id>', Show.as_view(), name='show'),
                path('staff/', StaffPage.as_view(), name='staff'),
-               path('adminsee/',AdminShowCart.as_view(), name='adminsee'),
+               path('adminsee/', AdminShowCart.as_view(), name='adminsee'),
+               path('cats/', chart, name='cats'),
+               path('export/', export_to_excel, name='export_to_excel'),
+               path('userchart/',user_chart,name='user_chart'),
 
                ]

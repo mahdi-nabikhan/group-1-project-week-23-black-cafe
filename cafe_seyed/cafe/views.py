@@ -240,10 +240,19 @@ class Show(View):
         return render(request, 'coffee_template/my_cart.html', context)
 
 
-class ShowCarts(View):
-    def get(self, request):
-        cart = Cart.objects.filter(user=request.user, status=False)
-        return render(request, 'landing_page/all_carts.html', {'cart': cart})
+# class ShowCarts(View):
+#     def get(self, request):
+#         cart = Cart.objects.filter(user=request.user, status=False)
+#         return render(request, 'landing_page/all_carts.html', {'cart': cart})
+
+class ShowCarts(ListView):
+    model=Cart
+    template_name='landing_page/all_carts.html'
+    
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['cart'] = Cart.objects.filter(user=self.request.user,status=False)
+        return data
 
 
 class StaffPage(View):
@@ -251,14 +260,18 @@ class StaffPage(View):
         return render(request, template_name='landing_page/staff.html')
 
 
-class AdminShowCart(View):
+# class AdminShowCart(View):
+#     template_name = 'landing_page/adminshowcart.html'
+
+#     def get(self, request):
+#         cart = Cart.objects.all()
+#         context = {'cart': cart}
+#         return render(request, template_name=self.template_name, context=context)
+
+class AdminShowCart(ListView):
+    model=Cart
     template_name = 'landing_page/adminshowcart.html'
-
-    def get(self, request):
-        cart = Cart.objects.all()
-        context = {'cart': cart}
-        return render(request, template_name=self.template_name, context=context)
-
+    context_object_name='cart'
 
 def chart(request):
     result = (OrderItem.objects.all()

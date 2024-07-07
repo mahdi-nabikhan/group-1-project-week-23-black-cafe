@@ -37,13 +37,26 @@ class CategoryListView(ListView):
 #     return render(request, 'landing_page/category_items.html', context)
 
 
-class ProductListView(View):
+# class ProductListView(View):
 
-    def get(self, request, category_id):
-        category = Categories.objects.get(id=category_id)
-        products = Products.objects.filter(category=category)
-        context = {'products': products, 'category': category}
-        return render(request, 'coffee_template/generic.html', context)
+#     def get(self, request, category_id):
+#         category = Categories.objects.get(id=category_id)
+#         products = Products.objects.filter(category=category)
+#         context = {'products': products, 'category': category}
+#         return render(request, 'coffee_template/generic.html', context)
+    
+class ProductListView(DetailView):
+    model=Categories
+    template_name='coffee_template/generic.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category = self.object # id ro mide (override shode az hamin method)
+        item = Products.objects.filter(category=category)
+    
+        context.update({
+            'products': item,
+        })
+        return context
 
 
 # def items_detail(request, item_id):

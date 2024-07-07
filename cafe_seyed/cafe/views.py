@@ -307,6 +307,7 @@ def user_chart(request):
               .annotate(dcount=Count('id'))
               .order_by()
               )
+
     user_age = (User.objects.all()
                 .values('age')
                 .annotate(dcount=Count('id'))
@@ -332,7 +333,7 @@ def user_chart(request):
     return render(request, 'landing_page/userchart.html', context)
 
 
-from django.db.models import Count
+
 from django.db.models.functions import ExtractHour
 
 

@@ -5,7 +5,7 @@
 	<div class="container">
 		<div class="row align-items-center justify-content-between d-flex">
 		  <div id="logo">
-			<a href="index.html"><img src={% static "img/logos.png" %} width='50px' alt="" title="" /></a>
+			<a href="{% url "cafe:landing_page" %}"><img src={% static "img/logos.png" %} width='50px' alt="" title="" /></a>
 		  </div>
 		  <nav id="nav-menu-container">
 			<ul class="nav-menu">
@@ -15,7 +15,7 @@
 				  </form>
 				</li>
 			  {% comment %} <li class="menu-active"><a href="#home">Home</a></li> {% endcomment %}
-			  <li><a href="#about">About</a></li>
+			  <li><a href="{% url 'cafe:about_us' %}">About</a></li>
 			  <li><a href="#coffee">Contact</a></li>
 			 
                {% if request.user.is_authenticated %}

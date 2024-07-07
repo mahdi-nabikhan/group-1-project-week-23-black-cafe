@@ -236,8 +236,8 @@ class Show(View):
 
         total_price = cart2.aggregate(total_price=Sum('result'))['total_price']
 
-        context = {'item': item, 'total_price': total_price}
-        return render(request, 'landing_page/show.html', context)
+        context = {'item': item, 'total_price': total_price,'cart2':cart2}
+        return render(request, 'coffee_template/my_cart.html', context)
 
 
 class ShowCarts(View):
@@ -354,3 +354,10 @@ def cart_chart(request):
         quantity.append(i['dcount'])
     context = {'result': result, 'time': time, 'quantity': quantity}
     return render(request, 'landing_page/cart_chart.html', context)
+
+
+
+class AllProduct(ListView):
+    model = Products
+    context_object_name = 'product'
+    template_name = 'coffee_template/all_product.html'

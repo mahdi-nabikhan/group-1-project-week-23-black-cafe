@@ -1,7 +1,7 @@
 from django.db.models import Sum, F, Count
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, View
+from django.views.generic import *
 from django.http import HttpResponse
 from openpyxl import Workbook
 from openpyxl.descriptors import Max
@@ -228,16 +228,33 @@ class AdminShowCarts(ListView):
     template_name = 'landing_page/show_all_cart.html'
 
 
-class Show(View):
-    def get(self, request, cart_id):
-        cart = Cart.objects.get(id=cart_id)
+# class Show(View):
+#     def get(self, request, cart_id):
+#         cart = Cart.objects.get(id=cart_id)
+#         item = OrderItem.objects.filter(cart=cart)
+#         cart2 = item.annotate(result=F('product__price') * F('quantity'))
+
+#         total_price = cart2.aggregate(total_price=Sum('result'))['total_price']
+
+#         context = {'item': item, 'total_price': total_price,'cart2':cart2}
+#         return render(request, 'coffee_template/my_cart.html', context)
+
+class Show(DetailView):
+    model = Cart
+    template_name = 'coffee_template/my_cart.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cart = self.object # id ro mide (override shode az hamin method)
         item = OrderItem.objects.filter(cart=cart)
         cart2 = item.annotate(result=F('product__price') * F('quantity'))
-
         total_price = cart2.aggregate(total_price=Sum('result'))['total_price']
-
-        context = {'item': item, 'total_price': total_price,'cart2':cart2}
-        return render(request, 'coffee_template/my_cart.html', context)
+        context.update({
+            'item': item,
+            'total_price': total_price,
+            'cart2': cart2
+        })
+        return context
 
 
 # class ShowCarts(View):

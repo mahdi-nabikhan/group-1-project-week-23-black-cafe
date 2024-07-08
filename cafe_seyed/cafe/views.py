@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from openpyxl import Workbook
 from openpyxl.descriptors import Max
 from django.contrib.auth import get_user_model
+from django.urls import reverse_lazy
 
 User = get_user_model()
 from .models import *
@@ -20,10 +21,10 @@ class CategoryListView(ListView):
     context_object_name = 'category'
     template_name = 'coffee_template/index.html'
 
-    def get_context_data(self,**kwargs):
-        context=super(CategoryListView,self).get_context_data(**kwargs)
+    def get_context_data(self, **kwargs):
+        context = super(CategoryListView, self).get_context_data(**kwargs)
         category = [self.get_queryset()[i:i + 4] for i in range(0, len(self.get_queryset()), 4)]
-        context["category"]=category
+        context["category"] = category
         return context
 
 
@@ -42,15 +43,16 @@ class CategoryListView(ListView):
 #         products = Products.objects.filter(category=category)
 #         context = {'products': products, 'category': category}
 #         return render(request, 'coffee_template/generic.html', context)
-    
+
 class ProductListView(DetailView):
-    model=Categories
-    template_name='coffee_template/generic.html'
+    model = Categories
+    template_name = 'coffee_template/generic.html'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        category = self.object # id ro mide (override shode az hamin method)
+        category = self.object  # id ro mide (override shode az hamin method)
         item = Products.objects.filter(category=category)
-    
+
         context.update({
             'products': item,
         })
@@ -194,18 +196,28 @@ class Ticket(View):
         return render(request, 'landing_page/forms/ticket_cart.html', {'form': form})
 
 
-class AddCategory(View):
-    def get(self, request):
-        form = AddCategoryForm()
-        return render(request, 'landing_page/forms/add_category.html', {'form': form})
+# class AddCategory(View):
+#     def get(self, request):
+#         form = AddCategoryForm()
+#         return render(request, 'landing_page/forms/add_category.html', {'form': form})
+#
+#     def post(self, request):
+#         form = AddCategoryForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             category_item = form.cleaned_data
+#             category = form.save()
+#             Image.objects.create(image=category_item['input_image'], category=category)
+#             return redirect('cafe:landing_page')
+class AddCategory(FormView):
+    form_class = AddCategoryForm
+    template_name = 'landing_page/forms/add_category.html'
+    success_url = reverse_lazy('cafe:landing_page')
 
-    def post(self, request):
-        form = AddCategoryForm(request.POST, request.FILES)
-        if form.is_valid():
-            category_item = form.cleaned_data
-            category = form.save()
-            Image.objects.create(image=category_item['input_image'], category=category)
-            return redirect('cafe:landing_page')
+    def form_valid(self, form):
+        form_data = form.cleaned_data
+        category = Categories.objects.create(name=form_data['name'], description=form_data['description'])
+        Image.objects.create(category=category, image=form_data['input_image'])
+        return super().form_valid(form)
 
 
 class AddProduct(View):
@@ -256,7 +268,7 @@ class Show(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        cart = self.object # id ro mide (override shode az hamin method)
+        cart = self.object  # id ro mide (override shode az hamin method)
         item = OrderItem.objects.filter(cart=cart)
         cart2 = item.annotate(result=F('product__price') * F('quantity'))
         total_price = cart2.aggregate(total_price=Sum('result'))['total_price']
@@ -274,12 +286,12 @@ class Show(DetailView):
 #         return render(request, 'landing_page/all_carts.html', {'cart': cart})
 
 class ShowCarts(ListView):
-    model=Cart
-    template_name='landing_page/all_carts.html'
-    
+    model = Cart
+    template_name = 'landing_page/all_carts.html'
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data['cart'] = Cart.objects.filter(user=self.request.user,status=False)
+        data['cart'] = Cart.objects.filter(user=self.request.user, status=False)
         return data
 
 
@@ -298,9 +310,10 @@ class StaffPage(View):
 #         return render(request, template_name=self.template_name, context=context)
 
 class AdminShowCart(ListView):
-    model=Cart
+    model = Cart
     template_name = 'landing_page/adminshowcart.html'
-    context_object_name='cart'
+    context_object_name = 'cart'
+
 
 def chart(request):
     result = (OrderItem.objects.all()
@@ -343,7 +356,8 @@ def export_to_excel(request):
     wb.save(response)
     return response
 
-#chage of userchart
+
+# chage of userchart
 def user_chart(request):
     result = (User.objects.all()
               .values('city')
@@ -353,14 +367,13 @@ def user_chart(request):
 
     city = []
     quantity = []
-    
+
     for dicts in result:
         for j in dicts.values():
             if type(j) == int:
                 quantity.append(j)
             else:
                 city.append(j)
-    
 
     context = {'quantity': quantity, 'city': city}
     return render(request, 'admin/city_chart.html', context)
@@ -404,7 +417,6 @@ def cart_chart(request):
         quantity.append(i['dcount'])
     context = {'result': result, 'time': time, 'quantity': quantity}
     return render(request, 'landing_page/cart_chart.html', context)
-
 
 
 class AllProduct(ListView):

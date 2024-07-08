@@ -27,6 +27,7 @@ urlpatterns = [path('', CategoryListView.as_view(), name='landing_page'),
                path('cats/', chart, name='cats'),
                path('export/', export_to_excel, name='export_to_excel'),
                path('userchart/', user_chart, name='user_chart'),
+               path('user_age/', user_age, name='user_age'),
                path('cart_chart/', cart_chart, name='cart_chart'),
                path('all_products/',AllProduct.as_view(),name='all_product')
 

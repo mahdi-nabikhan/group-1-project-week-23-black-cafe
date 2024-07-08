@@ -1,0 +1,39 @@
+{% extends "admin/dashboard.html" %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock script %}
+
+
+{% block chart %}
+<div style='width: 1400px ;height: 800px;margin:auto'>
+    <canvas id="myChart"></canvas>
+ 
+  
+  
+  
+  <script>
+    const ctx = document.getElementById('myChart');
+  
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: {{ label|safe }},
+        datasets: [{
+          label: '# of Votes',
+          data: ({{ quantity|safe }}),
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script> </div>
+  <a href="{% url 'cafe:export_to_excel'%}">download information </a>
+  {{ test }}
+{% endblock chart %}

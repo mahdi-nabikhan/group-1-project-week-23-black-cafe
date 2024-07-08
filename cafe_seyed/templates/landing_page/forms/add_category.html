@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+{% extends "admin/dashboard.html" %}
+{% comment %} <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,4 +12,15 @@
     <input type="submit" value="add category">
 </form>
 </body>
-</html>
+</html> {% endcomment %}
+
+
+
+{% block chart  %}
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="add category">
+</form>
+{% endblock chart  %}

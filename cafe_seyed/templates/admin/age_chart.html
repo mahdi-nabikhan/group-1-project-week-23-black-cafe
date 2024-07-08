@@ -1,0 +1,41 @@
+{% extends "admin/dashboard.html" %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock script %}
+
+
+{% block chart %}
+<div style='width: 1400px ;height: 800px;margin:auto'>
+    <canvas id="myBarChart"></canvas>
+
+
+<script>
+
+    const barData = {
+        labels: {{ age|safe }},
+        datasets: [{
+            label: 'lens of age of customer',
+            data: {{ count_age|safe }},
+            backgroundColor: 'rgb(75, 192, 192)',
+            borderWidth: 1,
+        }],
+    };
+
+    const barCtx = document.getElementById('myBarChart').getContext('2d');
+    new Chart(barCtx, {
+        type: 'bar',
+        data: barData,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                },
+            },
+        },
+    });
+
+    
+    
+</script></div>
+{% endblock chart %}

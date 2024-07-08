@@ -15,18 +15,16 @@ from .forms import *
 # Create your views here.
 
 
-# def landing_page(request):
-#     category = Categories.objects.all()
-#     context = {'category': category}
-#     return render(request, 'landing_page/land.html', context)
-#
-
 class CategoryListView(ListView):
     model = Categories
-    queryset = Categories.objects.all()
-    # {'context object name :queryset}
     context_object_name = 'category'
-    template_name = 'coffee_template/index.html'  ######
+    template_name = 'coffee_template/index.html'
+
+    def get_context_data(self,**kwargs):
+        context=super(CategoryListView,self).get_context_data(**kwargs)
+        category = [self.get_queryset()[i:i + 4] for i in range(0, len(self.get_queryset()), 4)]
+        context["category"]=category
+        return context
 
 
 # def items(request, category_id):
@@ -287,7 +285,8 @@ class ShowCarts(ListView):
 
 class StaffPage(View):
     def get(self, request):
-        return render(request, template_name='landing_page/staff.html')
+        # return render(request, template_name='landing_page/staff.html')
+        return render(request, template_name='admin/dashboard.html')
 
 
 # class AdminShowCart(View):
@@ -319,7 +318,8 @@ def chart(request):
                 product_name.append(j)
 
     context = {'test': result, 'quantity': quantity, 'label': product_name}
-    return render(request, 'landing_page/cats.html', context)
+    # return render(request, 'landing_page/cats.html', context)
+    return render(request, 'admin/top_sales.html', context)
 
 
 def export_to_excel(request):
@@ -343,7 +343,7 @@ def export_to_excel(request):
     wb.save(response)
     return response
 
-
+#chage of userchart
 def user_chart(request):
     result = (User.objects.all()
               .values('city')
@@ -351,30 +351,37 @@ def user_chart(request):
               .order_by()
               )
 
-    user_age = (User.objects.all()
-                .values('age')
-                .annotate(dcount=Count('id'))
-                .order_by()
-                )
     city = []
     quantity = []
-    age = []
-    count_age = []
-    d = []
+    
     for dicts in result:
         for j in dicts.values():
             if type(j) == int:
                 quantity.append(j)
             else:
                 city.append(j)
+    
+
+    context = {'quantity': quantity, 'city': city}
+    return render(request, 'admin/city_chart.html', context)
+
+
+def user_age(request):
+    user_age = (User.objects.all()
+                .values('age')
+                .annotate(dcount=Count('id'))
+                .order_by()
+                )
+    age = []
+    count_age = []
+    d = []
     for dict in user_age:
         age.append(dict['age'])
         count_age.append(dict['dcount'])
         d.append(dict)
 
-    context = {'quantity': quantity, 'city': city, 'age': age, 'count_age': count_age, 'd': d}
-    return render(request, 'landing_page/userchart.html', context)
-
+    context = {'age': age, 'count_age': count_age, 'd': d}
+    return render(request, 'admin/age_chart.html', context)
 
 
 from django.db.models.functions import ExtractHour

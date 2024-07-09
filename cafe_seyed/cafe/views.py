@@ -133,16 +133,30 @@ def cart_detail(request):
         return render(request, 'landing_page/forms/cart_views.html', context)
 
 
-def search_products(request):
-    product_name = request.GET.get('q')
-    products = Products.objects.filter(product_name__contains=product_name)
+# def search_products(request):
+#     product_name = request.GET.get('q')
+#     products = Products.objects.filter(product_name__contains=product_name)
 
-    context = {'products': products,
-               'not_found': f'{product_name} does not exist.'
-               }
-    return render(request, 'coffee_template/generic.html', context)
+#     context = {'products': products,
+#                'not_found': f'{product_name} does not exist.'
+#                }
+#     return render(request, 'coffee_template/generic.html', context)
 
+class Search(ListView):
+    model=Products
+    template_name='coffee_template/generic.html'
+    context_object_name = 'products'
 
+    def get_context_data(self, **kwargs):
+        context = super(Search, self).get_context_data(**kwargs)
+        product_name=self.request.GET.get('q')
+        all_products=self.get_queryset().filter(product_name__icontains=product_name)
+        context["products"] = all_products
+        context["not_found"]=f'{product_name} does not exist.'
+        return context
+        
+        
+            
 def about_us(request):
     return render(request, 'landing_page/about_us.html')
 

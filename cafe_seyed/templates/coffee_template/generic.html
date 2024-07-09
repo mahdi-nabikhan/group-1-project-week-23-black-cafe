@@ -44,8 +44,8 @@
             </div>
             <nav id="nav-menu-container">
               <ul class="nav-menu">
-                <li><form class="form-inline">
-                  <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <li><form method="get" class="form-inline" action="{% url 'cafe:search' %}">
+                  <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q">
                   <button class="btn  my-2 my-sm-0" type="submit" style="color: rgb(92, 66, 10);">Search</button>
                 </form>
               </li>
@@ -153,6 +153,7 @@
 {#            </p>								#}
 {#          </div>#}
 {#        </div>#}
+          {% if products %}
           {% for i in products %} 
         <div class="col-lg-4">
           <div class="single-menu">
@@ -174,6 +175,11 @@
           </div>
         </div>
         {% endfor %}
+        {% else %}
+        <div style='margin-left:400px'>
+        <h2>{{not_found}}</h2>
+      </div>
+        {% endif %}
 {#        <div class="col-lg-4">#}
 {#          <div class="single-menu">#}
 {#            <div class="title-div justify-content-between d-flex">#}

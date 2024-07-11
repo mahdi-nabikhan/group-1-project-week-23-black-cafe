@@ -1,0 +1,24 @@
+<!-- my_template.html -->
+{% load group_tags %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Conditional Buttons</title>
+</head>
+<body>
+    {% if user.is_authenticated %}
+        <p>Welcome, {{ user.username }}!</p>
+        {% if user|has_group:"Admins" %}
+            <button type="button">Admin Button</button>
+        {% endif %}
+        {% if user|has_group:"Editors" %}
+            <button type="button">Editor Button</button>
+        {% endif %}
+        {% if user|has_group:"Viewers" %}
+            <button type="button">Viewer Button</button>
+        {% endif %}
+    {% else %}
+        <p>Please log in to see the buttons.</p>
+    {% endif %}
+</body>
+</html>

@@ -11,6 +11,8 @@ from django.urls import reverse_lazy
 User = get_user_model()
 from .models import *
 from .forms import *
+from .decorators import *
+from django.utils.decorators import method_decorator
 
 
 # Create your views here.
@@ -143,20 +145,19 @@ def cart_detail(request):
 #     return render(request, 'coffee_template/generic.html', context)
 
 class Search(ListView):
-    model=Products
-    template_name='coffee_template/generic.html'
+    model = Products
+    template_name = 'coffee_template/generic.html'
     context_object_name = 'products'
 
     def get_context_data(self, **kwargs):
         context = super(Search, self).get_context_data(**kwargs)
-        product_name=self.request.GET.get('q')
-        all_products=self.get_queryset().filter(product_name__icontains=product_name)
+        product_name = self.request.GET.get('q')
+        all_products = self.get_queryset().filter(product_name__icontains=product_name)
         context["products"] = all_products
-        context["not_found"]=f'{product_name} does not exist.'
+        context["not_found"] = f'{product_name} does not exist.'
         return context
-        
-        
-            
+
+
 def about_us(request):
     return render(request, 'landing_page/about_us.html')
 
@@ -222,6 +223,7 @@ class Ticket(View):
 #             category = form.save()
 #             Image.objects.create(image=category_item['input_image'], category=category)
 #             return redirect('cafe:landing_page')
+@method_decorator(allowed_users(allowed_roles=['manager', 'staff']), name='dispatch')
 class AddCategory(FormView):
     form_class = AddCategoryForm
     template_name = 'landing_page/forms/add_category.html'
@@ -234,6 +236,7 @@ class AddCategory(FormView):
         return super().form_valid(form)
 
 
+@method_decorator(allowed_users(allowed_roles=['manager', 'staff']), name='dispatch')
 class AddProduct(View):
     def get(self, request, category_id):
         form = AddProductForm()
@@ -299,6 +302,7 @@ class Show(DetailView):
 #         cart = Cart.objects.filter(user=request.user, status=False)
 #         return render(request, 'landing_page/all_carts.html', {'cart': cart})
 
+@method_decorator(allowed_users(allowed_roles=['manager', 'staff']), name='dispatch')
 class ShowCarts(ListView):
     model = Cart
     template_name = 'landing_page/all_carts.html'
@@ -309,6 +313,7 @@ class ShowCarts(ListView):
         return data
 
 
+@method_decorator(allowed_users(allowed_roles=['manager', 'staff']), name='dispatch')
 class StaffPage(View):
     def get(self, request):
         # return render(request, template_name='landing_page/staff.html')

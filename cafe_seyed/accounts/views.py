@@ -4,13 +4,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from cafe.urls import *
+from .decorators import unauthenticated_user, allowed_users
 
 
 # Create your views here.
 
-
+@unauthenticated_user
 def login_view(request):
     form = AuthenticationForm()
 
@@ -57,7 +58,7 @@ def logoutview(request):
 
 #     def get(self, request):
 #         return render(request, 'accounts/registration.html')
-
+@unauthenticated_user
 def RegisterView(request):
     form = CustomUserCreationForm()
     if request.method == "POST":

@@ -286,7 +286,7 @@ class Show(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.object  # id ro mide (override shode az hamin method)
-        item = OrderItem.objects.filter(cart__user=user,cart__status=False)
+        item = OrderItem.objects.filter(cart__user=user, cart__status=False)
         cart2 = item.annotate(result=F('product__price') * F('quantity'))
         total_price = cart2.aggregate(total_price=Sum('result'))['total_price']
         context.update({
@@ -295,6 +295,24 @@ class Show(DetailView):
             'cart2': cart2
         })
         return context
+
+
+class PayCart(View):
+    template_name = 'coffee_template/my_cart.html'
+
+    def post(self, request):
+        user = request.user.id
+        cart = Cart.objects.get(user=user,status=False)
+        cart.status = True
+        cart.save()
+        return redirect('cafe:landing_page')
+
+
+class DeleteItem(DeleteView):
+    model = OrderItem
+    success_url = reverse_lazy('cafe:landing_page')
+    template_name = 'coffee_template/delete_order_item.html'
+
 
 
 # class ShowCarts(View):
@@ -455,3 +473,25 @@ class Profile(View):
         context = {'user': user, 'not_pay_cart': not_pay_cart, 'pay_cart': pay_cart, 'orders': orders}
         return render(request, template_name=self.template_name, context=context)
 
+
+class PaidCart(ListView):
+    queryset = Cart.objects.filter(status=True)
+    template_name = "admin/pay_cart.html"
+    context_object_name = 'pay_cart'
+
+
+class NotPaidCart(ListView):
+    queryset = Cart.objects.filter(status=False)
+    template_name = "admin/not_pay_cart.html"
+    context_object_name = 'not_pay_cart'
+
+
+class AdminShowDetail(DetailView):
+    model = Cart
+    template_name = 'admin/admin_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cart = self.object
+        context['orders'] = OrderItem.objects.filter(cart=cart)
+        return context

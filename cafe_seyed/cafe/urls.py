@@ -30,6 +30,11 @@ urlpatterns = [path('', CategoryListView.as_view(), name='landing_page'),
                path('user_age/', user_age, name='user_age'),
                path('cart_chart/', cart_chart, name='cart_chart'),
                path('all_products/', AllProduct.as_view(), name='all_product'),
-               path('profile/', Profile.as_view(), name='profile')
+               path('profile/', Profile.as_view(), name='profile'),
+               path('not_pay_cart/',NotPaidCart.as_view(),name='not_paid_cart'),
+               path('paid_cart/',PaidCart.as_view(),name='paid_cart'),
+               path('adminshow/<pk>/',AdminShowDetail.as_view(),name='adminshow'),
+               path('pay/',PayCart.as_view(),name='pay'),
+               path('delete_item/<int:pk>/',DeleteItem.as_view(),name='delete_item'),
 
                ]

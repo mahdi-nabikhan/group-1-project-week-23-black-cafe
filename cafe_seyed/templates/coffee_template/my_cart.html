@@ -54,7 +54,7 @@
 							</div>
 							<div class="col-xs-2">
 								<button type="button" class="btn btn-link btn-xs">
-									<span class="glyphicon glyphicon-trash"> </span>
+									<a href="{% url 'cafe:delete_item' prod.pk %}"><span class="glyphicon glyphicon-trash"> </span></a>
 								</button>
 							</div>
 						</div>
@@ -69,10 +69,12 @@
 							<h4 class="text-right">Total <strong>{{total_price}}$</strong></h4>
 						</div>
 						<div class="col-xs-3">
-							<button type="button" class="btn btn-success btn-block">
-								Checkout
-							</button>
+                            <form method="post" action="{% url 'cafe:pay' %}">
+                                {% csrf_token %}
+							<input type="submit" value="Pay" class="btn btn-success btn-block">
+                            </form>
 						</div>
+                        
 					</div>
 				</div>
 			</div>

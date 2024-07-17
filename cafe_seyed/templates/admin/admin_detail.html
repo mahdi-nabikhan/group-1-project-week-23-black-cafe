@@ -1,0 +1,14 @@
+{% extends "admin/dashboard.html" %}
+
+
+{% block chart %}
+    {% for i in orders%}
+        <div>
+        product name :{{ i.product.product_name }}<br>
+        price : {{ i.product.price }}<br>
+        quantity : {{ i.quantity }}<br>
+        <a href="#"> Delete</a>
+        
+        </div><hr>
+    {% endfor %}
+{% endblock chart %}

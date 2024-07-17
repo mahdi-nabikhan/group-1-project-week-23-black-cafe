@@ -442,3 +442,16 @@ class AllProduct(ListView):
     model = Products
     context_object_name = 'product'
     template_name = 'coffee_template/all_product.html'
+
+
+class Profile(View):
+    template_name = 'coffee_template/profile.html'
+
+    def get(self, request):
+        user = User.objects.get(id=request.user.id)
+        not_pay_cart = Cart.objects.filter(user=user, status=False)
+        pay_cart = Cart.objects.filter(user=user, status=True)
+        orders = OrderItem.objects.filter(cart__status=True, quantity__gt=5)
+        context = {'user': user, 'not_pay_cart': not_pay_cart, 'pay_cart': pay_cart, 'orders': orders}
+        return render(request, template_name=self.template_name, context=context)
+

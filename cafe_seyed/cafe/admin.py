@@ -36,3 +36,6 @@ class ImageAdmin(admin.ModelAdmin):
 @admin.register(ProductImage)
 class ProductImageAdmin(admin.ModelAdmin):
     list_display = ['title', 'description', 'image']
+@admin.register(Ticket)
+class TicketAdmin(admin.ModelAdmin):
+    list_display = ['title','description','phone']

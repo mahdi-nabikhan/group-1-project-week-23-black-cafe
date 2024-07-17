@@ -21,7 +21,7 @@
 
     {% if request.user.is_authenticated %}
       <li class="nav-item active">
-        <a class="nav-link " href= "#">{{request.user.username}}</a>
+        <a class="nav-link " href= "{% url 'cafe:profile' %}">{{request.user.username}}</a>
       </li>
 
       <li class="nav-item active">

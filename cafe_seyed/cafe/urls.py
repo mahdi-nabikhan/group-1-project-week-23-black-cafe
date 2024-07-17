@@ -29,6 +29,7 @@ urlpatterns = [path('', CategoryListView.as_view(), name='landing_page'),
                path('userchart/', user_chart, name='user_chart'),
                path('user_age/', user_age, name='user_age'),
                path('cart_chart/', cart_chart, name='cart_chart'),
-               path('all_products/',AllProduct.as_view(),name='all_product')
+               path('all_products/', AllProduct.as_view(), name='all_product'),
+               path('profile/', Profile.as_view(), name='profile')
 
                ]

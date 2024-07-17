@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse, reverse_lazy
 from cafe.urls import *
 from .decorators import unauthenticated_user, allowed_users
+from .models import CustomUser
 
 
 # Create your views here.
@@ -74,3 +75,12 @@ class RegistrationView(CreateView):
     form_class = CustomUserCreationForm
     template_name = 'accounts/registration.html'
     success_url = reverse_lazy('cafe:landing_page')
+
+
+class EditProfileView(UpdateView):
+    model = CustomUser
+
+    success_url = reverse_lazy('cafe:profile')
+    template_name = 'forms/edit_profile.html'
+    fields = ['first_name', 'last_name', 'age', 'city']
+    context_object_name = 'form'

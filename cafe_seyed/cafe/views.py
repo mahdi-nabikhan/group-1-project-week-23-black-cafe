@@ -280,13 +280,13 @@ class AdminShowCarts(ListView):
 #         return render(request, 'coffee_template/my_cart.html', context)
 
 class Show(DetailView):
-    model = Cart
+    model = User
     template_name = 'coffee_template/my_cart.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        cart = self.object  # id ro mide (override shode az hamin method)
-        item = OrderItem.objects.filter(cart=cart)
+        user = self.object  # id ro mide (override shode az hamin method)
+        item = OrderItem.objects.filter(cart__user=user,cart__status=False)
         cart2 = item.annotate(result=F('product__price') * F('quantity'))
         total_price = cart2.aggregate(total_price=Sum('result'))['total_price']
         context.update({

@@ -54,7 +54,6 @@ class ProductListView(DetailView):
         context = super().get_context_data(**kwargs)
         category = self.object  # id ro mide (override shode az hamin method)
         item = Products.objects.filter(category=category)
-
         context.update({
             'products': item,
         })
@@ -495,3 +494,4 @@ class AdminShowDetail(DetailView):
         cart = self.object
         context['orders'] = OrderItem.objects.filter(cart=cart)
         return context
+

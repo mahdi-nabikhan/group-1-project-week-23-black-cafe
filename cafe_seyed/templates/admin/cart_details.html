@@ -1,0 +1,12 @@
+{% extends "admin/dashboard.html" %}
+
+
+{% block chart %}
+    {% for i in order%}
+        <div>
+            {{ i.product.product_name }}
+            {{ i.product.price }}
+            {{ i.quantity }}
+        </div><hr>
+    {% endfor %}
+{% endblock chart %}

@@ -7,6 +7,7 @@ from .managers import CustomUserManager
 
 
 class CustomUser(AbstractUser):
+
     username = None
     email = models.EmailField(unique=True)
     age = models.PositiveIntegerField()

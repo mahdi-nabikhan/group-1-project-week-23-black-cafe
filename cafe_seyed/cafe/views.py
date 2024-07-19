@@ -468,7 +468,7 @@ class Profile(View):
         user = User.objects.get(id=request.user.id)
         not_pay_cart = Cart.objects.filter(user=user, status=False)
         pay_cart = Cart.objects.filter(user=user, status=True)
-        orders = OrderItem.objects.filter(cart__status=True, quantity__gt=5)
+        orders = OrderItem.objects.filter(cart__status=True, quantity__gt=5,cart__user=request.user)
         context = {'user': user, 'not_pay_cart': not_pay_cart, 'pay_cart': pay_cart, 'orders': orders}
         return render(request, template_name=self.template_name, context=context)
 

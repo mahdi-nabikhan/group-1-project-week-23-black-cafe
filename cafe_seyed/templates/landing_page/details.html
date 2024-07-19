@@ -244,7 +244,7 @@ background:#eee;
                             {% for i in product %}
                                 {% for img in i.image.all %}
                                     <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                                        <img class="d-block w-100" height="400px" width="400px" src="{{ img.image.url }}" alt="">
+                                        <img class="d-block w-100 rounded-circle" height="400px" width="400px" src="{{ img.image.url }}" alt="">
                                     </div>
                                 {% endfor %}
                             
